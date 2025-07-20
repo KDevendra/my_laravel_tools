@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>LinkSnap - Shorten Your URLs</title>
+    <title>Shortd.link - Shorten URLs, Share Links, Track Clicks</title>
+    <meta name="description" content="Shortd.link: Transform long URLs into short, shareable links. Fast, secure, customizable, with detailed analytics. Shorten your URLs today!">
+    <meta name="keywords" content="URL shortener, shorten links, Shortd.link, link management, link analytics, custom URLs">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -13,7 +15,7 @@
     <!-- Header -->
     <header class="bg-indigo-700 text-white py-5 sticky top-0 shadow-md">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold">LinkSnap</h1>
+            <h1 class="text-3xl font-extrabold">Shortd.Link</h1>
             <nav>
                 <ul class="flex space-x-8">
                     <li><a href="#home" class="hover:text-indigo-200 transition">Home</a></li>
@@ -30,7 +32,7 @@
         <div class="container mx-auto px-4 text-center">
             <h2 class="text-5xl font-bold text-gray-800 mb-6">Shorten. Share. Track.</h2>
             <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Transform long URLs into short, powerful links with
-                LinkSnap. Easy to use, secure, and packed with features.</p>
+                Shortd.link. Easy to use, secure, and packed with features.</p>
             <div class="max-w-lg mx-auto">
                 <form id="shortenForm" onsubmit="event.preventDefault(); shortenLink();">
                     @csrf
@@ -55,11 +57,11 @@
     <!-- Features Section -->
     <section id="features" class="py-20 bg-white">
         <div class="container mx-auto px-4">
-            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">What Makes LinkSnap Special?</h2>
+            <h2 class="text-4xl font-bold text-center text-gray-800 mb-12">What Makes Shortd.link Special?</h2>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
                 <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition text-center">
                     <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" loading="lazy">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
@@ -68,7 +70,7 @@
                 </div>
                 <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition text-center">
                     <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" loading="lazy">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path>
                     </svg>
@@ -77,7 +79,7 @@
                 </div>
                 <div class="bg-gray-50 p-8 rounded-xl shadow-lg hover:shadow-xl transition text-center">
                     <svg class="w-12 h-12 mx-auto mb-4 text-indigo-600" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" loading="lazy">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
                         </path>
@@ -93,8 +95,8 @@
     <!-- About Section -->
     <section id="about" class="py-20 bg-gray-100">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl font-bold text-gray-800 mb-8">About LinkSnap</h2>
-            <p class="text-lg text-gray-600 max-w-3xl mx-auto">LinkSnap is your go-to solution for creating concise,
+            <h2 class="text-4xl font-bold text-gray-800 mb-8">About Shortd.link</h2>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Shortd.link is your go-to solution for creating concise,
                 shareable links. Built with simplicity and performance in mind, we empower users to manage their links
                 effortlessly while providing insights to optimize their reach.</p>
         </div>
@@ -129,7 +131,7 @@
     <!-- Footer -->
     <footer class="bg-indigo-700 text-white py-6">
         <div class="container mx-auto px-4 text-center">
-            <p class="text-sm">© 2025 LinkSnap. All rights reserved.</p>
+            <p class="text-sm">© 2025 ShortdLink. All rights reserved.</p>
         </div>
     </footer>
 
@@ -144,7 +146,7 @@
             toast.textContent = message;
             toastContainer.appendChild(toast);
 
-            // Auto-remove toast after 3 seconds
+
             setTimeout(() => {
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
@@ -153,12 +155,16 @@
 
         function isValidURL(url) {
             try {
-                new URL(url);
-                return true;
-            } catch {
+                const hasProtocol = /^(http|https):\/\//i.test(url);
+                const formattedUrl = hasProtocol ? url : 'http://' + url;
+                const parsed = new URL(formattedUrl);
+                return !!parsed.hostname && /^[\w.-]+\.[a-z]{2,}$/i.test(parsed.hostname);
+            } catch (e) {
                 return false;
             }
         }
+
+
 
         function copyLink() {
             const shortenedLink = document.getElementById('shortenedLink').textContent;
@@ -190,11 +196,12 @@
                     shortenedLink.href = data.short_url;
                     shortenedLink.textContent = data.short_url;
                     resultDiv.classList.remove('hidden');
+                    showToast(data.message, 'success');
                 } catch (error) {
                     showToast('Failed to shorten URL: ' + error.message, 'error');
                 }
             } else {
-                showToast('Please enter a valid URL (e.g., https://example.com)', 'error');
+                showToast('Please enter a valid URL (e.g. https://example.com)', 'error');
             }
         }
 
@@ -216,7 +223,7 @@
                 }
                 const data = await response.json();
                 showToast(data.message, 'success');
-                form.reset(); // Clear form after successful submission
+                form.reset();
             } catch (error) {
                 showToast('Failed to send message: ' + error.message, 'error');
             }

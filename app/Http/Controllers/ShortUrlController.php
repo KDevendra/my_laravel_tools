@@ -11,7 +11,7 @@ class ShortUrlController extends Controller
 {
     public function shorten(Request $request)
     {
-        $request->validate(['url' => 'required|url']);
+        $request->validate(['url' => 'required']);
 
         $agent = new Agent();
         $shortCode = Str::random(6);
@@ -30,7 +30,7 @@ class ShortUrlController extends Controller
             'updated_by' => null,
         ]);
 
-        return response()->json(['short_url' => url($shortCode)]);
+        return response()->json(['short_url' => url($shortCode), 'message' => 'URL shortened successfully!'], 201);
     }
 
     public function redirect($shortCode)
