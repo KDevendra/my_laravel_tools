@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>LinkSnap - Shorten Your URLs</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -31,15 +32,18 @@
             <p class="text-xl text-gray-600 mb-10 max-w-2xl mx-auto">Transform long URLs into short, powerful links with
                 LinkSnap. Easy to use, secure, and packed with features.</p>
             <div class="max-w-lg mx-auto">
-                <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-3">
-                    <input id="urlInput" type="text" placeholder="Paste your long URL here"
-                        class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                    <button onclick="shortenLink()"
-                        class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-800 transition">Snap
-                        It!</button>
-                </div>
+                <form id="shortenForm" onsubmit="event.preventDefault(); shortenLink();">
+                    @csrf
+                    <div class="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-3">
+                        <input id="urlInput" name="url" type="text" placeholder="Paste your long URL here"
+                            class="w-full px-5 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
+                        <button type="submit"
+                            class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-800 transition">Snap
+                            It!</button>
+                    </div>
+                </form>
                 <div id="result" class="mt-6 text-lg text-gray-800 hidden">
-                    <p>Your shortened link: <a id="shortenedLink" href="#"
+                    <p>Your shortened link: <a id="shortenedLink" target="_blank" href="#"
                             class="text-indigo-600 underline font-semibold"></a></p>
                     <button onclick="copyLink()" class="mt-2 text-sm text-indigo-600 hover:underline">Copy to
                         Clipboard</button>
@@ -103,15 +107,21 @@
             <p class="text-lg text-gray-600 mb-10 max-w-2xl mx-auto">Got questions or feedback? We’d love to hear from
                 you!</p>
             <div class="max-w-lg mx-auto">
-                <input type="text" placeholder="Your name"
-                    class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                <input type="email" placeholder="Your email"
-                    class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition">
-                <textarea placeholder="Your message"
-                    class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
-                    rows="5"></textarea>
-                <button class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-800 transition">Send
-                    Message</button>
+                <form id="contactForm" onsubmit="event.preventDefault(); submitContact();">
+                    @csrf
+                    <input type="text" name="name" placeholder="Your name"
+                        class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        required>
+                    <input type="email" name="email" placeholder="Your email"
+                        class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        required>
+                    <textarea name="message" placeholder="Your message"
+                        class="w-full px-5 py-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 transition"
+                        rows="5" required></textarea>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-800 transition">Send
+                        Message</button>
+                </form>
             </div>
         </div>
     </section>
@@ -130,8 +140,7 @@
         function showToast(message, type = 'success') {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
-            toast.className = `p-4 rounded-lg shadow-lg text-white animate-fade-in-out max-w-xs ${type === 'success' ? 'bg-green-500' : 'bg-red-500'
-                }`;
+            toast.className = `p-4 rounded-lg shadow-lg text-white animate-fade-in-out max-w-xs ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
             toast.textContent = message;
             toastContainer.appendChild(toast);
 
@@ -140,22 +149,6 @@
                 toast.classList.add('opacity-0');
                 setTimeout(() => toast.remove(), 300);
             }, 3000);
-        }
-
-        function shortenLink() {
-            const urlInput = document.getElementById('urlInput').value;
-            const resultDiv = document.getElementById('result');
-            const shortenedLink = document.getElementById('shortenedLink');
-
-            if (urlInput && isValidURL(urlInput)) {
-                // Mock URL shortening (replace with backend API in production)
-                const mockShortLink = `https://linksnap.to/${Math.random().toString(36).substring(2, 9)}`;
-                shortenedLink.href = mockShortLink;
-                shortenedLink.textContent = mockShortLink;
-                resultDiv.classList.remove('hidden');
-            } else {
-                showToast('Please enter a valid URL (e.g., https://example.com)', 'error');
-            }
         }
 
         function isValidURL(url) {
@@ -172,6 +165,61 @@
             navigator.clipboard.writeText(shortenedLink).then(() => {
                 showToast('Link copied to clipboard!', 'success');
             });
+        }
+
+        async function shortenLink() {
+            const urlInput = document.getElementById('urlInput').value;
+            const resultDiv = document.getElementById('result');
+            const shortenedLink = document.getElementById('shortenedLink');
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            if (urlInput && isValidURL(urlInput)) {
+                try {
+                    const response = await fetch('/shorten', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                        },
+                        body: JSON.stringify({ url: urlInput }),
+                    });
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    const data = await response.json();
+                    shortenedLink.href = data.short_url;
+                    shortenedLink.textContent = data.short_url;
+                    resultDiv.classList.remove('hidden');
+                } catch (error) {
+                    showToast('Failed to shorten URL: ' + error.message, 'error');
+                }
+            } else {
+                showToast('Please enter a valid URL (e.g., https://example.com)', 'error');
+            }
+        }
+
+        async function submitContact() {
+            const form = document.getElementById('contactForm');
+            const formData = new FormData(form);
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+
+            try {
+                const response = await fetch('/contact', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': csrfToken,
+                    },
+                    body: formData,
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                showToast(data.message, 'success');
+                form.reset(); // Clear form after successful submission
+            } catch (error) {
+                showToast('Failed to send message: ' + error.message, 'error');
+            }
         }
     </script>
 
