@@ -170,7 +170,7 @@
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50"></div>
 
     <script>
-        // Toggle Mobile Menu
+
         document.getElementById('menu-toggle').addEventListener('click', () => {
             document.getElementById('mobile-menu').classList.remove('translate-x-full');
             document.getElementById('mobile-menu').classList.add('translate-x-0');
@@ -181,7 +181,7 @@
             document.getElementById('mobile-menu').classList.add('translate-x-full');
         });
 
-        // Close mobile menu when a link is clicked
+
         document.querySelectorAll('#mobile-menu a').forEach(link => {
             link.addEventListener('click', () => {
                 document.getElementById('mobile-menu').classList.remove('translate-x-0');
