@@ -6,8 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Shortd.link - Shorten URLs, Share Links, Track Clicks</title>
-    <meta name="description" content="Shortd.link: Transform long URLs into short, shareable links. Fast, secure, customizable, with detailed analytics. Shorten your URLs today!">
-    <meta name="keywords" content="URL shortener, shorten links, Shortd.link, link management, link analytics, custom URLs">
+    <meta name="description"
+        content="Shortd.link: Transform long URLs into short, shareable links. Fast, secure, customizable, with detailed analytics. Shorten your URLs today!">
+    <meta name="keywords"
+        content="URL shortener, shorten links, Shortd.link, link management, link analytics, custom URLs">
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
@@ -16,7 +18,16 @@
     <header class="bg-indigo-700 text-white py-5 sticky top-0 shadow-md">
         <div class="container mx-auto px-4 flex justify-between items-center">
             <h1 class="text-3xl font-extrabold">Shortd.Link</h1>
-            <nav>
+            <!-- Hamburger Menu Button for Mobile -->
+            <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7">
+                    </path>
+                </svg>
+            </button>
+            <!-- Navigation -->
+            <nav class="hidden md:flex" id="nav-menu">
                 <ul class="flex space-x-8">
                     <li><a href="#home" class="hover:text-indigo-200 transition">Home</a></li>
                     <li><a href="#features" class="hover:text-indigo-200 transition">Features</a></li>
@@ -26,6 +37,26 @@
             </nav>
         </div>
     </header>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu"
+        class="md:hidden fixed inset-0 bg-indigo-700 bg-opacity-95 z-50 transform translate-x-full transition-transform duration-300 ease-in-out">
+        <div class="flex justify-end p-4">
+            <button id="close-menu" class="text-white focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
+                    </path>
+                </svg>
+            </button>
+        </div>
+        <nav class="flex flex-col items-center space-y-6 pt-10">
+            <a href="#home" class="text-white text-lg hover:text-indigo-200 transition">Home</a>
+            <a href="#features" class="text-white text-lg hover:text-indigo-200 transition">Features</a>
+            <a href="#about" class="text-white text-lg hover:text-indigo-200 transition">About</a>
+            <a href="#contact" class="text-white text-lg hover:text-indigo-200 transition">Contact</a>
+        </nav>
+    </div>
 
     <!-- Hero Section -->
     <section id="home" class="py-24 bg-gradient-to-r from-indigo-50 to-blue-100">
@@ -139,13 +170,31 @@
     <div id="toastContainer" class="fixed bottom-4 right-4 z-50"></div>
 
     <script>
+        // Toggle Mobile Menu
+        document.getElementById('menu-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.remove('translate-x-full');
+            document.getElementById('mobile-menu').classList.add('translate-x-0');
+        });
+
+        document.getElementById('close-menu').addEventListener('click', () => {
+            document.getElementById('mobile-menu').classList.remove('translate-x-0');
+            document.getElementById('mobile-menu').classList.add('translate-x-full');
+        });
+
+        // Close mobile menu when a link is clicked
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.remove('translate-x-0');
+                document.getElementById('mobile-menu').classList.add('translate-x-full');
+            });
+        });
+
         function showToast(message, type = 'success') {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
             toast.className = `p-4 rounded-lg shadow-lg text-white animate-fade-in-out max-w-xs ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
             toast.textContent = message;
             toastContainer.appendChild(toast);
-
 
             setTimeout(() => {
                 toast.classList.add('opacity-0');
@@ -163,8 +212,6 @@
                 return false;
             }
         }
-
-
 
         function copyLink() {
             const shortenedLink = document.getElementById('shortenedLink').textContent;
