@@ -5,7 +5,7 @@ use App\Http\Controllers\ShortUrlController;
 use App\Http\Controllers\ContactController;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('Shortd/welcome');
 });
 Route::post('/shorten', [ShortUrlController::class, 'shorten']);
 Route::get('/history', [ShortUrlController::class, 'history']);
