@@ -30,6 +30,8 @@ class ShortUrlController extends Controller
             'updated_by' => null,
         ]);
 
+
+
         return response()->json(['short_url' => url($shortCode), 'message' => 'URL shortened successfully!'], 201);
     }
 
@@ -38,5 +40,13 @@ class ShortUrlController extends Controller
         $shortUrl = ShortUrl::where('short_code', $shortCode)->firstOrFail();
         $shortUrl->increment('clicks');
         return redirect($shortUrl->original_url);
+    }
+
+    public function history(Request $request)
+    {
+        $history = ShortUrl::where('ip_address', $request->ip())
+            ->select(['id', 'ip_address', 'browser', 'device', 'os', 'original_url', 'short_code', 'created_at'])
+            ->paginate(10);
+        return view('history', compact('history'));
     }
 }

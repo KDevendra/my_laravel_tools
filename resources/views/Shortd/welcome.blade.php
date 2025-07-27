@@ -17,7 +17,7 @@
     <!-- Header -->
     <header class="bg-indigo-700 text-white py-5 sticky top-0 shadow-md">
         <div class="container mx-auto px-4 flex justify-between items-center">
-            <h1 class="text-3xl font-extrabold">Shortd.Link</h1>
+            <h1 class="text-3xl font-extrabold"><a href="">Shortd.Link</a></h1>
             <!-- Hamburger Menu Button for Mobile -->
             <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
@@ -81,6 +81,11 @@
                     <button onclick="copyLink()" class="mt-2 text-sm text-indigo-600 hover:underline">Copy to
                         Clipboard</button>
                 </div>
+                <!-- Show History Button -->
+                <button onclick="window.location.href='/history';"
+                    class="mt-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-800 transition">
+                    Show History
+                </button>
             </div>
         </div>
     </section>

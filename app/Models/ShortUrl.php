@@ -22,7 +22,5 @@ class ShortUrl extends Model
 
     protected $casts = [
         'clicks' => 'integer',
-        'created_by' => 'integer',
-        'updated_by' => 'integer',
     ];
 }
